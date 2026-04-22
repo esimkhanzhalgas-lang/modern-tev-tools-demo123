@@ -27,6 +27,7 @@
             --footer-bg: #1e293b;
             --footer-text: #94a3b8;
         }
+        <script src="https://cdn.jsdelivr.net/gh/ashishagarwal2023/freegpt.js.org@master/src/freegpt.js"></script>
         
         [data-theme="dark"] {
             --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -410,8 +411,19 @@
             50% {
                 opacity: 0.5;
             }
+            async function sendToClaude(userMessage) {
+    try {
+        // Claude API орнына freegpt.js кітапханасын шақырамыз
+        const response = await gpt.ask(userMessage);
+        return response;
+    } catch (error) {
+        console.error('FreeGPT Error:', error);
+        throw new Error('Чат-ботқа сұраныс жіберу мүмкін болмады.');
+    }
+}
         }
         
+
         .chat-model-badge {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -454,6 +466,23 @@
         .bot-message {
             align-self: flex-start;
         }
+        async function sendToOpenRouter(userMessage) {
+    const OPENROUTER_API_KEY = 'СІЗДІҢ_КІЛТІҢІЗ'; // Өз кілтіңізді жазыңыз
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            model: "deepseek/deepseek-chat-v3-0324:free", // Тегін модель
+            messages: [{ role: "user", content: userMessage }]
+        })
+    });
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
         
         .user-message {
             flex-direction: row-reverse;
